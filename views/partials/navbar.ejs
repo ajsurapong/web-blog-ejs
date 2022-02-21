@@ -22,7 +22,30 @@
                   </div>
               </li> -->
           </ul>
-          <button class="d-flex btn btn-primary">Sign in</button>
+          <button class="d-flex btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalSignIn">Sign in</button>
       </div>
 </div>
 </nav>
+
+<!-- Modal -->
+<div class="modal fade" id="modalSignIn" tabindex="-1" role="dialog" aria-labelledby="modelTitleId" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sign In</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formSignIn">
+                    Username
+                    <input type="text" name="username" class="form-control" required>
+                    Password
+                    <input type="password" name="password" class="form-control" required>
+                    <button type="submit" class="btn btn-primary mt-2 float-end">OK</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/public_blog/scripts/login.js"></script>
