@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const jwt = require('jsonwebtoken');
 // const path = require('path');
@@ -31,8 +32,10 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
     // console.log(username, password);
     if (username == 'admin' && password == '1234') {
-        // res.send('Success');
-        res.send('/blogs');
+        const payload = { user: username };
+        const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1d' });
+        res.json({url: '/blogs', token: token});
+        // res.send('/blogs');
     }
     else {
         res.status(400).send('Fail');
@@ -43,7 +46,7 @@ app.post('/login', (req, res) => {
 app.get('/jwt', (_req, res) => {
     const username = 'admin';
     const payload = { user: username };
-    const token = jwt.sign(payload, '2dayIs2Boring4Study', { expiresIn: '1d' });
+    const token = jwt.sign(payload, process.env.JWT_KEY, { expiresIn: '1d' });
     res.send(token);
 });
 
@@ -65,12 +68,38 @@ app.post('/jwtDecode', (req, res) => {
                 token = tokenString[1];
             }
         }
-        jwt.verify(token, '2dayIs2Boring4Study', (err, decoded) => {
+        jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
             if (err) {
                 res.status(400).send('Incorrect token');
             }
             else {
                 res.send(decoded);
+            }
+        });
+    }
+});
+
+app.delete('/post', (req, res) => {
+    let token = req.headers['authorization'] || req.headers['x-access-token'];
+    if (token == undefined || token == null) {
+        // no token
+        res.status(400).send('No token');
+    }
+    else {
+        // token found
+        if (req.headers.authorization) {
+            const tokenString = token.split(' ');
+            if (tokenString[0] == 'Bearer') {
+                token = tokenString[1];
+            }
+        }
+        jwt.verify(token, process.env.JWT_KEY, (err, decoded) => {
+            if (err) {
+                res.status(400).send('Incorrect token');
+            }
+            else {
+                // delete the post in DB....
+                res.send('Deleted. Thanks ' + decoded.user);
             }
         });
     }

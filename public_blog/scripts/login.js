@@ -13,8 +13,10 @@ $("#formSignIn").submit(function(e) {
         url: "/login",
         data: formData,
         success: function (response) {
-            // alert(response);
-            window.location.replace(response);
+            // alert(response.token);
+            // keep token to localstorage
+            window.localStorage.token = response.token;
+            window.location.replace(response.url);
         },
         error: function(xhr) {
             Swal.fire({
